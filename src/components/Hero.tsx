@@ -27,11 +27,11 @@ const Hero = () => {
 
   return (
     <section ref={containerRef} className="relative w-full h-[250vh] bg-black">
-      {/* Pinned Track Container */}
-      <div ref={trackRef} className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden bg-black">
+      {/* Pinned Track Container handled by GSAP */}
+      <div ref={trackRef} className="h-screen w-full flex items-center justify-center bg-black">
         
         {/* Abstract "Road" */}
-        <div className="relative w-full h-[200px] flex items-center border-y border-white/5 bg-dark-900/50">
+        <div className="relative w-full min-h-[350px] flex items-center border-y border-white/5 bg-dark-900/50">
           
           {/* Trail */}
           <div ref={trailRef} className="absolute top-1/2 left-0 h-[2px] -translate-y-1/2 bg-gradient-to-r from-transparent to-primary-500 shadow-[0_0_15px_#6366f1] z-10 w-0"></div>
@@ -39,7 +39,7 @@ const Hero = () => {
           {/* Main Visual "Car" Equivalent (A glowing orb/shape) */}
           <div 
             ref={visualRef}
-            className="absolute top-1/2 left-0 -translate-y-1/2 z-30 w-16 h-16 md:w-24 md:h-24 rounded-full bg-primary-600 shadow-[0_0_50px_#6366f1] flex items-center justify-center -ml-8 md:-ml-12"
+            className="absolute top-1/2 left-0 -translate-y-1/2 z-30 w-20 h-20 md:w-32 md:h-32 rounded-full bg-primary-600 shadow-[0_0_50px_#6366f1] flex items-center justify-center -ml-10 md:-ml-16"
           >
             <div className="w-1/2 h-1/2 bg-white rounded-full animate-pulse-slow"></div>
           </div>
@@ -49,7 +49,7 @@ const Hero = () => {
             {letters.map((char, idx) => (
               <span 
                 key={idx} 
-                className="value-letter text-3xl sm:text-4xl md:text-6xl lg:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 opacity-0 transition-opacity duration-300"
+                className="value-letter text-4xl sm:text-6xl md:text-8xl lg:text-[10rem] leading-none font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 opacity-0 transition-opacity duration-300"
               >
                 {char === ' ' ? '\u00A0' : char}
               </span>

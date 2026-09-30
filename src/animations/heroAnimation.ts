@@ -58,22 +58,25 @@ export const initHeroAnimation = ({
     // --- 2. Scroll-Based Animation ---
     // According to guidelines:
     // "The main visual element (image/object) should move smoothly based on scroll position."
-    
-    const moveX = window.innerWidth;
+    // User explicitly requested NOT to copy the reference's horizontal movement.
+    // Creating a unique, premium parallax/zoom effect instead.
 
+    // The visual element will scale up massively, rotate, and move down
     gsap.to(visual, {
       scrollTrigger: {
         trigger: container,
         start: 'top top',
         end: 'bottom top',
-        scrub: 1, // Smooth interpolation
+        scrub: 1, 
       },
-      x: moveX + 200, // Move horizontally all the way across the screen
-      rotation: 360, // Add some spin to make it dynamic
+      scale: 4,          // Zoom in dramatically
+      y: window.innerHeight * 0.5, // Move down
+      rotation: 180,     // Spin
+      opacity: 0,        // Fade out into the background
       ease: 'none',
     });
 
-    // Subtly fade out the text as the user scrolls deep down
+    // Subtly parallax the text and stats in the opposite direction
     gsap.to([headlineRef.current, statsContainerRef.current], {
       scrollTrigger: {
         trigger: container,
@@ -81,8 +84,9 @@ export const initHeroAnimation = ({
         end: 'center top',
         scrub: 1,
       },
-      opacity: 0.1,
-      y: -50,
+      opacity: 0,
+      y: -150, // Move up while the orb moves down
+      scale: 0.9,
       ease: 'none',
     });
 

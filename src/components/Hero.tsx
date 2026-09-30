@@ -37,10 +37,10 @@ const Hero = () => {
       {/* Sticky section covering above the fold */}
       <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden pt-20 px-6">
         
-        {/* Main Visual Element (The "Car" equivalent) - starts off-screen left */}
+        {/* Main Visual Element (The "Car" equivalent) - placed centrally behind text */}
         <div 
           ref={visualRef}
-          className="absolute top-1/2 left-0 -translate-y-1/2 -ml-32 z-10 w-32 h-32 md:w-48 md:h-48 flex items-center justify-center pointer-events-none"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-32 h-32 md:w-64 md:h-64 flex items-center justify-center pointer-events-none"
         >
           {/* Abstract glowing sphere */}
           <div className="absolute inset-0 bg-primary-600 rounded-full blur-xl opacity-60"></div>

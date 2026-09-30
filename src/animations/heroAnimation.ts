@@ -25,7 +25,7 @@ export const initHeroAnimation = ({
     return;
   }
 
-  let ctx = gsap.context(() => {
+  const ctx = gsap.context(() => {
     const container = containerRef.current!;
     const visual = visualRef.current!;
     

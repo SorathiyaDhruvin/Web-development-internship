@@ -87,7 +87,7 @@ const About = () => {
             We build digital experiences that drive growth.
           </h3>
           <p className="text-gray-400 text-lg md:text-xl leading-relaxed max-w-2xl">
-            At Itzfizz, we don't just create websites; we engineer comprehensive digital ecosystems tailored for modern brands. Our approach blends premium aesthetics with robust, scalable technology.
+            At Itzfizz, we don&apos;t just create websites; we engineer comprehensive digital ecosystems tailored for modern brands. Our approach blends premium aesthetics with robust, scalable technology.
           </p>
         </div>
 

@@ -3,21 +3,28 @@
 import React, { useRef, useEffect } from 'react';
 import { initHeroAnimation } from '../animations/heroAnimation';
 
+const statsData = [
+  { value: "98%", desc: "Client Satisfaction" },
+  { value: "150+", desc: "Projects Delivered" },
+  { value: "10x", desc: "Performance Growth" },
+  { value: "24/7", desc: "Premium Support" }
+];
+
 const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
+  const statsContainerRef = useRef<HTMLDivElement>(null);
   const visualRef = useRef<HTMLDivElement>(null);
-  const trailRef = useRef<HTMLDivElement>(null);
-  
+
   const headline = "WELCOME ITZFIZZ";
-  const letters = headline.split('');
+  const words = headline.split(' ');
 
   useEffect(() => {
     const cleanup = initHeroAnimation({
       containerRef,
-      trackRef,
-      visualRef,
-      trailRef
+      headlineRef,
+      statsContainerRef,
+      visualRef
     });
 
     return () => {
@@ -27,56 +34,49 @@ const Hero = () => {
 
   return (
     <section ref={containerRef} className="relative w-full h-[250vh] bg-black">
-      {/* Pinned Track Container handled by GSAP */}
-      <div ref={trackRef} className="h-screen w-full flex items-center justify-center bg-black">
+      {/* Sticky section covering above the fold */}
+      <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden pt-20 px-6">
         
-        {/* Abstract "Road" */}
-        <div className="relative w-full min-h-[350px] flex items-center border-y border-white/5 bg-dark-900/50">
+        {/* Main Visual Element (The "Car" equivalent) - starts off-screen left */}
+        <div 
+          ref={visualRef}
+          className="absolute top-1/2 left-0 -translate-y-1/2 -ml-32 z-10 w-32 h-32 md:w-48 md:h-48 flex items-center justify-center pointer-events-none"
+        >
+          {/* Abstract glowing sphere */}
+          <div className="absolute inset-0 bg-primary-600 rounded-full blur-xl opacity-60"></div>
+          <div className="absolute inset-4 bg-gradient-to-tr from-white to-primary-300 rounded-full shadow-[0_0_50px_#6366f1]"></div>
+          <div className="absolute inset-8 bg-black rounded-full border border-primary-500/50"></div>
+        </div>
+
+        {/* Content Container (z-20 so it sits above/around visual) */}
+        <div className="relative z-20 flex flex-col items-center w-full max-w-7xl mt-12">
           
-          {/* Trail */}
-          <div ref={trailRef} className="absolute top-1/2 left-0 h-[2px] -translate-y-1/2 bg-gradient-to-r from-transparent to-primary-500 shadow-[0_0_15px_#6366f1] z-10 w-0"></div>
-
-          {/* Main Visual "Car" Equivalent (A glowing orb/shape) */}
-          <div 
-            ref={visualRef}
-            className="absolute top-1/2 left-0 -translate-y-1/2 z-30 w-20 h-20 md:w-32 md:h-32 rounded-full bg-primary-600 shadow-[0_0_50px_#6366f1] flex items-center justify-center -ml-10 md:-ml-16"
+          {/* Headline - strictly required on page load */}
+          <h1 
+            ref={headlineRef}
+            className="text-5xl md:text-8xl lg:text-[9rem] leading-none font-black text-white text-center uppercase tracking-[0.15em] mb-16 flex flex-wrap justify-center gap-x-8 gap-y-4"
           >
-            <div className="w-1/2 h-1/2 bg-white rounded-full animate-pulse-slow"></div>
-          </div>
-
-          {/* Headline Letters placed absolutely */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full px-12 md:px-32 flex justify-between z-20 pointer-events-none">
-            {letters.map((char, idx) => (
-              <span 
-                key={idx} 
-                className="value-letter text-4xl sm:text-6xl md:text-8xl lg:text-[10rem] leading-none font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 opacity-0 transition-opacity duration-300"
-              >
-                {char === ' ' ? '\u00A0' : char}
+            {words.map((word, wIdx) => (
+              <span key={wIdx} className="flex">
+                {word.split('').map((char, cIdx) => (
+                  <span key={cIdx} className="char inline-block text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-500">
+                    {char}
+                  </span>
+                ))}
               </span>
+            ))}
+          </h1>
+
+          {/* Stats Below Headline - strictly required on page load */}
+          <div ref={statsContainerRef} className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-16 w-full">
+            {statsData.map((stat, idx) => (
+              <div key={idx} className="stat-item flex flex-col items-center text-center bg-dark-900/30 p-6 rounded-2xl border border-white/5 backdrop-blur-sm">
+                <span className="text-4xl md:text-5xl font-bold text-primary-400 mb-3">{stat.value}</span>
+                <span className="text-xs md:text-sm text-gray-400 uppercase tracking-widest font-medium">{stat.desc}</span>
+              </div>
             ))}
           </div>
           
-        </div>
-
-        {/* Stats Boxes (like the reference) positioned absolutely */}
-        <div className="stat-box absolute top-[15%] left-[5%] md:left-[10%] bg-dark-800 border border-white/10 rounded-2xl p-4 md:p-6 opacity-0 z-40 max-w-[200px] md:max-w-xs shadow-2xl backdrop-blur-md">
-          <div className="text-2xl md:text-4xl font-bold text-primary-400 mb-1 md:mb-2">98%</div>
-          <div className="text-xs md:text-sm text-gray-400 uppercase tracking-widest">Client Satisfaction</div>
-        </div>
-
-        <div className="stat-box absolute bottom-[15%] left-[15%] md:left-[25%] bg-dark-800 border border-white/10 rounded-2xl p-4 md:p-6 opacity-0 z-40 max-w-[200px] md:max-w-xs shadow-2xl backdrop-blur-md">
-          <div className="text-2xl md:text-4xl font-bold text-indigo-400 mb-1 md:mb-2">150+</div>
-          <div className="text-xs md:text-sm text-gray-400 uppercase tracking-widest">Projects Delivered</div>
-        </div>
-
-        <div className="stat-box absolute top-[20%] right-[15%] md:right-[25%] bg-dark-800 border border-white/10 rounded-2xl p-4 md:p-6 opacity-0 z-40 max-w-[200px] md:max-w-xs shadow-2xl backdrop-blur-md">
-          <div className="text-2xl md:text-4xl font-bold text-purple-400 mb-1 md:mb-2">10x</div>
-          <div className="text-xs md:text-sm text-gray-400 uppercase tracking-widest">Performance Growth</div>
-        </div>
-
-        <div className="stat-box absolute bottom-[20%] right-[5%] md:right-[10%] bg-dark-800 border border-white/10 rounded-2xl p-4 md:p-6 opacity-0 z-40 max-w-[200px] md:max-w-xs shadow-2xl backdrop-blur-md">
-          <div className="text-2xl md:text-4xl font-bold text-blue-400 mb-1 md:mb-2">24/7</div>
-          <div className="text-xs md:text-sm text-gray-400 uppercase tracking-widest">Premium Support</div>
         </div>
 
       </div>

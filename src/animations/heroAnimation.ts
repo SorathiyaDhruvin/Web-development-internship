@@ -5,99 +5,87 @@ gsap.registerPlugin(ScrollTrigger);
 
 interface HeroAnimationProps {
   containerRef: React.RefObject<HTMLDivElement | null>;
-  trackRef: React.RefObject<HTMLDivElement | null>;
+  headlineRef: React.RefObject<HTMLHeadingElement | null>;
+  statsContainerRef: React.RefObject<HTMLDivElement | null>;
   visualRef: React.RefObject<HTMLDivElement | null>;
-  trailRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export const initHeroAnimation = ({
   containerRef,
-  trackRef,
-  visualRef,
-  trailRef
+  headlineRef,
+  statsContainerRef,
+  visualRef
 }: HeroAnimationProps) => {
   if (
     !containerRef.current ||
-    !trackRef.current ||
-    !visualRef.current ||
-    !trailRef.current
+    !headlineRef.current ||
+    !statsContainerRef.current ||
+    !visualRef.current
   ) {
     return;
   }
 
   let ctx = gsap.context(() => {
-    const visual = visualRef.current!;
-    const trail = trailRef.current!;
     const container = containerRef.current!;
+    const visual = visualRef.current!;
     
-    // Get all letters and stat boxes
-    const letters = gsap.utils.toArray('.value-letter') as HTMLElement[];
-    const statBoxes = gsap.utils.toArray('.stat-box') as HTMLElement[];
+    const chars = headlineRef.current!.querySelectorAll('.char');
+    const stats = statsContainerRef.current!.querySelectorAll('.stat-item');
 
-    const trackWidth = window.innerWidth;
-    const visualWidth = visual.offsetWidth || 100;
-    const endX = trackWidth - visualWidth;
+    // --- 1. Initial Load Animation ---
+    // According to guidelines:
+    // "The headline should appear smoothly (fade + slight movement or staggered reveal)."
+    // "The statistics should animate in one by one with a subtle delay."
+    
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-    // Get exact offsets for the letters relative to viewport
-    const getLetterOffsets = () => {
-      const containerRect = trackRef.current!.getBoundingClientRect();
-      return letters.map(letter => {
-        const rect = letter.getBoundingClientRect();
-        return rect.left - containerRect.left;
-      });
-    };
+    // Headline staggering in
+    tl.fromTo(
+      chars,
+      { y: 50, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.8, stagger: 0.04 },
+      0 // start immediately
+    )
+    
+    // Stats revealing one by one
+    .fromTo(
+      stats,
+      { y: 30, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.6, stagger: 0.15 },
+      "-=0.5"
+    );
 
-    let letterOffsets = getLetterOffsets();
-
-    // Re-calculate on resize
-    window.addEventListener('resize', () => {
-      letterOffsets = getLetterOffsets();
-    });
+    // --- 2. Scroll-Based Animation ---
+    // According to guidelines:
+    // "The main visual element (image/object) should move smoothly based on scroll position."
+    
+    const moveX = window.innerWidth;
 
     gsap.to(visual, {
       scrollTrigger: {
         trigger: container,
         start: 'top top',
         end: 'bottom top',
-        scrub: true,
-        pin: trackRef.current,
+        scrub: 1, // Smooth interpolation
       },
-      x: endX,
+      x: moveX + 200, // Move horizontally all the way across the screen
+      rotation: 360, // Add some spin to make it dynamic
       ease: 'none',
-      onUpdate: function () {
-        // Calculate the center of the visual orb
-        const visualX = gsap.getProperty(visual, 'x') as number;
-        const visualCenter = visualX + (visualWidth / 2);
-        
-        // Update trail width
-        gsap.set(trail, { width: visualCenter });
+    });
 
-        // Update letter opacities
-        letters.forEach((letter, i) => {
-          const letterX = letterOffsets[i];
-          if (visualCenter >= letterX - 20) {
-            letter.style.opacity = '1';
-          } else {
-            letter.style.opacity = '0';
-          }
-        });
+    // Subtly fade out the text as the user scrolls deep down
+    gsap.to([headlineRef.current, statsContainerRef.current], {
+      scrollTrigger: {
+        trigger: container,
+        start: 'top top',
+        end: 'center top',
+        scrub: 1,
       },
+      opacity: 0.1,
+      y: -50,
+      ease: 'none',
     });
 
-    // Reveal stat boxes at different scroll depths
-    statBoxes.forEach((box, i) => {
-      const triggerStart = 300 + (i * 250); // Stagger the start points
-      gsap.to(box, {
-        scrollTrigger: {
-          trigger: container,
-          start: `top+=${triggerStart} top`,
-          end: `top+=${triggerStart + 300} top`,
-          scrub: true,
-        },
-        opacity: 1,
-        y: -20,
-      });
-    });
   }, containerRef);
 
   return () => {

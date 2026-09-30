@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useEffect } from 'react';
-import { initHeroAnimation } from '../animations/heroAnimation';
+import { initHeroAnimation } from '@/animations/heroAnimation';
 
 const statsData = [
   { value: "98%", desc: "Client Satisfaction" },
